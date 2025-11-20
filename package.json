@@ -1,0 +1,19 @@
+{
+  "name": "ws-interbank-demo",
+  "version": "1.0.0",
+  "description": "Demo mínima de WebSocket para transferencias interbancarias: Central + Bancos",
+  "type": "module",
+  "scripts": {
+    "start:central": "node central-server.js",
+    "start:bank": "node bank-client.js",
+    "start:bankB00": "node bank-client-b00.js",
+    "start:demo": "npm-run-all -p start:central start:bank:B01 start:bank:B07"
+  },
+  "dependencies": {
+    "socket.io": "4.7.5",
+    "socket.io-client": "4.7.5"
+  },
+  "devDependencies": {
+    "npm-run-all": "4.1.5"
+  }
+}
