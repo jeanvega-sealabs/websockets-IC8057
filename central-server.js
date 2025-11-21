@@ -13,7 +13,6 @@ const apiToken = "BANK-CENTRAL-IC8057-2025"
 io.use((socket, next) => {
     const { bankId, bankName, token } = socket.handshake.auth || {};
     if (!bankId) return next(new Error("🏦Central: missing bankId"));
-    console.log(token)
     if (token != apiToken) return next(new Error("🏦Central: missing orinvalid token"))
     socket.data.bankId = bankId;
     socket.data.bankName = bankName;
@@ -149,13 +148,13 @@ io.on("connection", (socket) => {
             if (!t) return;
 
             if (!ok) {
-                console.log(`🏦Central: ${bankId} reserve.result | reject id=${id} reason=${reason || "NO_FUNDS"}`);
+                console.log(`🏦Central: ${bankId} reserve.result | ⛔ reject id=${id} reason=${reason || "NO_FUNDS"}`);
                 emitTo(t.fromBank, "transfer.reject", { id, reason: reason || "RESERVE_FAILED" });
                 emitTo(t.toBank, "transfer.reject", { id, reason: reason || "RESERVE_FAILED" });
                 return;
             } else {
                 t.state = "RESERVED";
-                console.log(`🏦Central: ${bankId} reserve.result | reserve id=${id}`);
+                console.log(`🏦Central: ${bankId} reserve.result | ✅ reserve id=${id}`);
                 emitTo(t.toBank, "transfer.credit", t);
                 return;
             }
@@ -168,13 +167,13 @@ io.on("connection", (socket) => {
             if (!t) return;
 
             if (!ok) {
-                console.log(`🏦Central: ${bankId} credit.result | reject id=${id} reason=${reason || "CREDIT_FAILED"}`);
+                console.log(`🏦Central: ${bankId} credit.result | ⛔ reject id=${id} reason=${reason || "CREDIT_FAILED"}`);
                 emitTo(t.fromBank, "transfer.reject", { id, reason: reason || "CREDIT_FAILED" });
                 emitTo(t.toBank, "transfer.reject", { id, reason: reason || "CREDIT_FAILED" });
                 return;
             } else {
                 t.state = "CREDIT";
-                console.log(`🏦Central: ${bankId} credit.result | credit id=${id}`);
+                console.log(`🏦Central: ${bankId} credit.result | ✅ credit id=${id}`);
                 emitTo(t.fromBank, "transfer.debit", t);
                 return;
             }
@@ -188,13 +187,13 @@ io.on("connection", (socket) => {
             if (!t) return;
 
             if (!ok) {
-                console.log(`🏦Central: ${bankId} debit.result | reject id=${id} reason=${reason || "DEBIT_FAILED"}`);
+                console.log(`🏦Central: ${bankId} debit.result | ⛔ reject id=${id} reason=${reason || "DEBIT_FAILED"}`);
                 emitTo(t.toBank, "transfer.rollback", { id, reason: reason || "DEBIT_FAILED" });
                 emitTo(t.fromBank, "transfer.reject", { id, reason: reason || "DEBIT_FAILED" });
                 return;
             } else {
                 t.state = "DEBIT";
-                console.log(`🏦Central: ${bankId} debit.result | debit id=${id}`);
+                console.log(`🏦Central: ${bankId} debit.result | ✅ debit id=${id}`);
                 emitTo(t.toBank, "transfer.commit", t);
                 emitTo(t.fromBank, "transfer.commit", t);
                 return;

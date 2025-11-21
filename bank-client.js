@@ -5,7 +5,7 @@ const BANK_ID = "B01";
 
 const socket = io(CENTRAL_URL, {
     transports: ["websocket"],
-    auth: { bankId: BANK_ID, token: "0d8e4172-9b6f-4f6f-9a33-921cf95a8c21", bankName: "B01" }
+    auth: { bankId: BANK_ID, token: "BANK-CENTRAL-IC8057-2025", bankName: "B01" }
 });
 
 socket.on("connect", () => {
@@ -16,7 +16,7 @@ socket.on("connect", () => {
     const intent = {
         id,
         from: "CR01B01CC0000",
-        to: "CR01B00CC0000",
+        to: "CR01B00111111111112",
         amount: 25000,
         currency: "CRC"
     };
