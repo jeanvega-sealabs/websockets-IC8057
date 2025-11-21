@@ -11,8 +11,9 @@ const apiToken = "BANK-CENTRAL-IC8057-2025"
 
 // Al conectar, cada banco informa su BANK_ID y se une a su "room"
 io.use((socket, next) => {
-    const { bankId, token, bankName } = socket.handshake.auth || {};
+    const { bankId, bankName, token } = socket.handshake.auth || {};
     if (!bankId) return next(new Error("🏦Central: missing bankId"));
+    console.log(token)
     if (token != apiToken) return next(new Error("🏦Central: missing orinvalid token"))
     socket.data.bankId = bankId;
     socket.data.bankName = bankName;
