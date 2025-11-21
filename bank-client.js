@@ -1,11 +1,11 @@
 import { io } from "socket.io-client";
 
-const CENTRAL_URL = process.env.CENTRAL_URL || "http://localhost:8080";
+const CENTRAL_URL = "http://137.184.36.3:6000";
 const BANK_ID = "B01";
 
 const socket = io(CENTRAL_URL, {
     transports: ["websocket"],
-    auth: { bankId: BANK_ID, token: "0d8e4172-9b6f-4f6f-9a33-921cf95a8c21", bankName: "TestBank" }
+    auth: { bankId: BANK_ID, token: "0d8e4172-9b6f-4f6f-9a33-921cf95a8c21", bankName: "B01" }
 });
 
 socket.on("connect", () => {

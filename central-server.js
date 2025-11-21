@@ -6,14 +6,14 @@ import { extractAndValidateBank, checkAccountValidity } from './auxFunctions.js'
 const PORT = process.env.PORT || 8080;
 const srv = http.createServer();
 const io = new Server(srv, { cors: { origin: "*" }, transports: ["websocket"] });
-const apiToken = "0d8e4172-9b6f-4f6f-9a33-921cf95a8c21"
+const apiToken = "BANK-CENTRAL-IC8057-2025"
 
 
 // Al conectar, cada banco informa su BANK_ID y se une a su "room"
 io.use((socket, next) => {
     const { bankId, token, bankName } = socket.handshake.auth || {};
-    if (!bankId) return next(new Error("missing bankId"));
-    if (token != apiToken) return next(new Error("missing orinvalid token"))
+    if (!bankId) return next(new Error("🏦Central: missing bankId"));
+    if (token != apiToken) return next(new Error("🏦Central: missing orinvalid token"))
     socket.data.bankId = bankId;
     socket.data.bankName = bankName;
     socket.join(bankId);
@@ -35,7 +35,7 @@ const TX = new Map(); // id -> { id, from, to, amount, state }
 io.on("connection", (socket) => {
     const bankId = socket.data.bankId;
     const bankName = socket.data.bankName;
-    console.log(`🏦✅ Banco ${bankName} conectado`);
+    console.log(`🏦Central: Banco ${bankName} conectado`);
 
     // El banco origen inicia una transferencia: transfer.intent
     socket.on("event", async (msg) => {
@@ -60,6 +60,7 @@ io.on("connection", (socket) => {
                 });;
                 return;
             }
+            console.log(`🏦Central: ${bankId} intent | ${id}: ${from} -> ${to} ₡${amount}`);
 
             //VALIDA BANCO ORIGEN Y DESTINO DESTINO
             const fromBankResult = extractAndValidateBank(from)
@@ -132,7 +133,6 @@ io.on("connection", (socket) => {
             }
 
             TX.set(id, { id, fromBank: fromBankResult.bankId, from, to, toBank: toBankResult.bankId, amount, currency, state: "NEW" });
-            console.log(`📝 intent ${id}: ${from} -> ${to} ₡${amount}`);
 
             // 2) CENTRAL -> ORIGEN: transfer.reserve (solicitar reserva)
             emitTo(fromBankResult.bankId, "transfer.reserve", { id });
@@ -148,14 +148,13 @@ io.on("connection", (socket) => {
             if (!t) return;
 
             if (!ok) {
-                console.log(`⛔ reserve REJECT id=${id} reason=${reason || "NO_FUNDS"}`);
+                console.log(`🏦Central: ${bankId} reserve.result | reject id=${id} reason=${reason || "NO_FUNDS"}`);
                 emitTo(t.fromBank, "transfer.reject", { id, reason: reason || "RESERVE_FAILED" });
                 emitTo(t.toBank, "transfer.reject", { id, reason: reason || "RESERVE_FAILED" });
                 return;
             } else {
                 t.state = "RESERVED";
-                console.log(`✅ reserve OK id=${id}`);
-
+                console.log(`🏦Central: ${bankId} reserve.result | reserve id=${id}`);
                 emitTo(t.toBank, "transfer.credit", t);
                 return;
             }
@@ -168,14 +167,13 @@ io.on("connection", (socket) => {
             if (!t) return;
 
             if (!ok) {
-                console.log(`⛔ CREDIT REJECT id=${id} reason=${reason || "CREDIT_FAILED"}`);
+                console.log(`🏦Central: ${bankId} credit.result | reject id=${id} reason=${reason || "CREDIT_FAILED"}`);
                 emitTo(t.fromBank, "transfer.reject", { id, reason: reason || "CREDIT_FAILED" });
                 emitTo(t.toBank, "transfer.reject", { id, reason: reason || "CREDIT_FAILED" });
                 return;
             } else {
                 t.state = "CREDIT";
-                console.log(`✅ CREDIT OK id=${id}`);
-
+                console.log(`🏦Central: ${bankId} credit.result | credit id=${id}`);
                 emitTo(t.fromBank, "transfer.debit", t);
                 return;
             }
@@ -189,13 +187,13 @@ io.on("connection", (socket) => {
             if (!t) return;
 
             if (!ok) {
-                console.log(`⛔ Debit REJECT id=${id} reason=${reason || "DEBIT_FAILED"}`);
+                console.log(`🏦Central: ${bankId} debit.result | reject id=${id} reason=${reason || "DEBIT_FAILED"}`);
                 emitTo(t.toBank, "transfer.rollback", { id, reason: reason || "DEBIT_FAILED" });
                 emitTo(t.fromBank, "transfer.reject", { id, reason: reason || "DEBIT_FAILED" });
                 return;
             } else {
                 t.state = "DEBIT";
-                console.log(`✅ DEBIT OK id=${id}`);
+                console.log(`🏦Central: ${bankId} debit.result | debit id=${id}`);
                 emitTo(t.toBank, "transfer.commit", t);
                 emitTo(t.fromBank, "transfer.commit", t);
                 return;
@@ -205,8 +203,8 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-        console.log(`🏦❌ Desconectado banco ${bankId}`);
+        console.log(`🏦Central: Desconectado banco ${bankId}`);
     });
 });
 
-srv.listen(PORT, () => console.log(`🟢🏛️ Central WS escuchando en :${PORT}`));
+srv.listen(PORT, () => console.log(`🏦Central: Central WS escuchando en :${PORT}`));

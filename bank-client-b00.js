@@ -1,11 +1,12 @@
 import { io } from "socket.io-client";
 
-const CENTRAL_URL = process.env.CENTRAL_URL || "http://localhost:8080";
+const CENTRAL_URL = "http://137.184.36.3:6000";
 const BANK_ID = "B00";
+
 
 const socket = io(CENTRAL_URL, {
     transports: ["websocket"],
-    auth: { bankId: BANK_ID, token: "0d8e4172-9b6f-4f6f-9a33-921cf95a8c21", bankName: "TestBank" }
+    auth: { bankId: BANK_ID, bankName: "TestBank", token: "BANK-CENTRAL-IC8057-2025", }
 });
 
 socket.on("connect", () => {
@@ -35,19 +36,22 @@ socket.on("event", (evt) => {
     if (type === "transfer.credit") {
         console.log(`✅ ${BANK_ID} credit`, data);
         //Ejecutar logica de acreditacion de fondos
-        //exitoso
-        //socket.emit("event", { type: "transfer.credit.result", data: { id: data.id, ok: true } });
-        //erroneo
-        socket.emit("event", { type: "transfer.credit.result", data: { id: data.id, ok: false, reason: "CREDIT_FAILED" } });
+        if (data.to === "CR01B00111111111112") {  //erroneo
+            socket.emit("event", { type: "transfer.credit.result", data: { id: data.id, ok: false, reason: "CREDIT_FAILED" } });
+        }
+        else {         //exitoso
+            socket.emit("event", { type: "transfer.credit.result", data: { id: data.id, ok: true } });
+        }
+
     }
 
     if (type === "transfer.debit") {
         console.log(`✅ ${BANK_ID} debit`, data);
         //Ejecutar logica de acreditacion de fondos
         //exitoso
-        //socket.emit("event", { type: "transfer.debit.result", data: { id: data.id, ok: true } });
+        socket.emit("event", { type: "transfer.debit.result", data: { id: data.id, ok: true } });
         //erroneo
-        socket.emit("event", { type: "transfer.debit.result", data: { id: data.id, ok: false, reason: "DEBIT_FAILED" } });
+        //socket.emit("event", { type: "transfer.debit.result", data: { id: data.id, ok: false, reason: "DEBIT_FAILED" } });
     }
 
     if (type === "transfer.rollback") {
