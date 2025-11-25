@@ -1,13 +1,13 @@
 
 const baseUrls = {
-    B01: "http://localhost:3011",
+    B01: "http://86.48.22.73/",
     B02: "http://localhost:3012",
-    B03: "http://localhost:3013",
+    B03: "https://bancoastralis-api.up.railway.app/",
     B04: "http://localhost:3014",
-    B05: "http://localhost:3015",
+    B05: "https://bank-crap-servi.onrender.com",
     B06: "http://localhost:3016",
-    B07: "http://localhost:3017",
-    B08: "http://localhost:3018",
+    B07: "https://py1dpw-production.up.railway.app/",
+    B08: "https://api.srlgestock.space/",
 };
 
 /**
