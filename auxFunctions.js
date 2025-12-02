@@ -1,7 +1,7 @@
 
 const baseUrls = {
     B01: "http://86.48.22.73/",
-    B02: "http://localhost:3012",
+    B02: "https://us-central1-api-banco-web.cloudfunctions.net/",
     B03: "https://bancoastralis-api.up.railway.app/",
     B04: "http://localhost:3014",
     B05: "https://bank-crap-servi.onrender.com",
