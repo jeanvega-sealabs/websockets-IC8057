@@ -203,7 +203,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-        console.log(`🏦Central: Desconectado banco ${bankId}`);
+        console.log(`🏦Central: Desconectado banco ${bankId} - ${bankName}`);
     });
 });
 
