@@ -1,13 +1,13 @@
 
 const baseUrls = {
-    B01: "http://86.48.22.73/",
-    B02: "https://us-central1-api-banco-web.cloudfunctions.net/",
-    B03: "https://bancoastralis-api.up.railway.app/",
-    B04: "http://localhost:3014",
+    B01: "http://86.48.22.73",
+    B02: "https://us-central1-api-banco-web.cloudfunctions.net",
+    B03: "https://bancoastralis-api.up.railway.app",
+    B04: "https://proyecto02-backend.onrender.com",
     B05: "https://bank-crap-servi.onrender.com",
     B06: "http://localhost:3016",
-    B07: "https://py1dpw-production.up.railway.app/",
-    B08: "https://api.srlgestock.space/",
+    B07: "https://py1dpw-production.up.railway.app",
+    B08: "https://api.srlgestock.space",
 };
 
 /**
