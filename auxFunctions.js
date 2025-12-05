@@ -63,7 +63,10 @@ export async function checkAccountValidity(iban, bankId) {
     try {
         const res = await fetch(url, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "X-API-TOKEN": "BANK-CENTRAL-IC8057-2025"
+            },
             body: JSON.stringify({ iban }),
             timeout: 5000,
         });

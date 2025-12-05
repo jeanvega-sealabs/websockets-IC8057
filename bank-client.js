@@ -15,8 +15,8 @@ socket.on("connect", () => {
     const id = "B10-" + Math.floor(Math.random() * 100000);
     const intent = {
         id,
-        from: "CR01B10CC0000",
-        to: "CR01B00111111111112",
+        from: "CR01B01CC0000",
+        to: "CR01B07000000000006",
         amount: 25000,
         currency: "CRC"
     };
