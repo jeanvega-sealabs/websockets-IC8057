@@ -146,7 +146,7 @@ io.on("connection", (socket) => {
             }
 
             TX.set(id, { id, fromBank: fromBankResult.bankId, from, to, toBank: toBankResult.bankId, amount, currency, state: "NEW" });
-
+            console.log("from", fromBankResult.bankId, "toBankResult:", toBankResult.bankId)
             // 2) CENTRAL -> ORIGEN: transfer.reserve (solicitar reserva)
             emitTo(fromBankResult.bankId, "transfer.reserve", { id });
             emitTo(toBankResult.bankId, "transfer.init", { id });
