@@ -1,22 +1,22 @@
 import { io } from "socket.io-client";
 
 const CENTRAL_URL = "http://137.184.36.3:6000";
-const BANK_ID = "B01";
+const BANK_ID = "B10";
 
 const socket = io(CENTRAL_URL, {
     transports: ["websocket"],
-    auth: { bankId: BANK_ID, token: "BANK-CENTRAL-IC8057-2025", bankName: "B01" }
+    auth: { bankId: BANK_ID, token: "BANK-CENTRAL-IC8057-2025", bankName: "JeanTest" }
 });
 
 socket.on("connect", () => {
     console.log(`🏦 ${BANK_ID} conectado al Central`);
 
 
-    const id = "B01-" + Math.floor(Math.random() * 100000);
+    const id = "B10-" + Math.floor(Math.random() * 100000);
     const intent = {
         id,
         from: "CR01B05CC0000",
-        to: "CR01B01111111111112",
+        to: "CR01B00111111111112",
         amount: 25000,
         currency: "CRC"
     };

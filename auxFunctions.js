@@ -33,7 +33,7 @@ export function extractAndValidateBank(iban) {
     const bankNum = parseInt(m[2], 10); // 7
 
     // Catálogo permitido: 01..08
-    if (bankNum < 0 || bankNum > 8) {
+    if (bankNum < 0 || bankNum > 10) {
         return { ok: false, error: "UNKNOWN_BANK" };
     }
 

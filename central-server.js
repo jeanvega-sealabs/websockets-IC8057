@@ -65,21 +65,34 @@ io.on("connection", (socket) => {
             //VALIDA BANCO ORIGEN Y DESTINO DESTINO
             const fromBankResult = extractAndValidateBank(from)
             const toBankResult = extractAndValidateBank(to)
-            if (fromBankResult.bankNum == toBankResult.bankNum) {
+
+
+            //VALIDA QUE LE BANCO EXISYA
+            if (!fromBankResult.ok) {
                 emitTo(bankId, "transfer.reject", {
                     id,
-                    reason: "SAME_BANK_NOT_ALLOWED",
-                    from,
+                    reason: "CHECK_BANK_ID",
                     to
                 });;
                 return;
             }
+
 
             //VALIDA QUE LE BANCO EXISYA
             if (!toBankResult.ok) {
                 emitTo(bankId, "transfer.reject", {
                     id,
                     reason: "UNKNOWN_BANK",
+                    to
+                });;
+                return;
+            }
+
+            if (fromBankResult.bankNum == toBankResult.bankNum) {
+                emitTo(bankId, "transfer.reject", {
+                    id,
+                    reason: "SAME_BANK_NOT_ALLOWED",
+                    from,
                     to
                 });;
                 return;
